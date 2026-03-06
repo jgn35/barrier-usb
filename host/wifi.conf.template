@@ -1,0 +1,15 @@
+wifi_list: (
+	{
+		ssid= "wifi_ssid_1";
+		psk= "wifi_psk_1";
+	},
+	{
+		ssid= "wifi_ssid_2";
+		psk= "wifi_psk_2";
+	},
+	{
+		ssid= "wifi_ssid_3";
+		psk= "wifi_psk_3";
+	}
+
+);

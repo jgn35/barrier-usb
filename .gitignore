@@ -1,2 +1,5 @@
 build
 .vscode
+components
+managed_components
+wifi.conf

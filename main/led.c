@@ -8,6 +8,7 @@
 #include <inttypes.h>
 #include <string.h>
 
+#include "esp_log.h"
 #include "driver/spi_common.h"
 #include "driver/spi_master.h"
 #include "led.h"
@@ -17,6 +18,7 @@ static spi_device_handle_t led;
 color current_color = { 0xff, 0, 0, 0xff};
 
 void set_led_color(uint8_t brightness, uint8_t r, uint8_t g, uint8_t b) {
+	char *module = "set_led_color";
 	esp_err_t ret;
 	uint8_t data[12] = { 0x00, 0x00, 0x00, 0x00, 0xe0 | (brightness & 0x1f), b, g, r, 0xff, 0xff, 0xff, 0xff};
 	
@@ -26,7 +28,7 @@ void set_led_color(uint8_t brightness, uint8_t r, uint8_t g, uint8_t b) {
 	tr.tx_buffer=data;
 	tr.rx_buffer=NULL;
 	ret=spi_device_polling_transmit(led, &tr);
-	printf("result %d (OK = %d, INVALID_ARG = %d, TIMEOUT = %d, NO_MEM = %d, INVALID_STATE=%d\n",
+	ESP_LOGD(module, "result %d (OK = %d, INVALID_ARG = %d, TIMEOUT = %d, NO_MEM = %d, INVALID_STATE=%d\n",
 			ret, ESP_OK, ESP_ERR_INVALID_ARG, ESP_ERR_TIMEOUT, ESP_ERR_NO_MEM, ESP_ERR_INVALID_STATE);
 	ESP_ERROR_CHECK(ret);
 }
@@ -42,8 +44,9 @@ void init_led() {
 		.quadhd_io_num = -1,
 		.max_transfer_sz = 12
 	};
+	char *module = "init_led";
 	ESP_ERROR_CHECK(spi_bus_initialize(SPI_LED, &config, SPI_DMA_CH_AUTO));
-        printf("spi_bus_initialized\n");
+        ESP_LOGD(module, "spi_bus_initialized\n");
 	const spi_device_interface_config_t dev_conf = {
 		.command_bits = 0,
 		.address_bits = 0,
@@ -55,7 +58,7 @@ void init_led() {
 		.duty_cycle_pos = 0
 	};
 	ESP_ERROR_CHECK(spi_bus_add_device(SPI_LED, &dev_conf, &led));
-	printf("spi_device added: %p\n", led);
+	ESP_LOGD(module, "spi_device added: %p\n", led);
 }
 
 void colorTask(void *param) {
