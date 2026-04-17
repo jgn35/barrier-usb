@@ -1,53 +1,24 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-H21 | ESP32-H4 | ESP32-P4 | ESP32-S2 | ESP32-S3 | Linux |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | --------- | -------- | -------- | -------- | -------- | ----- |
+# Barrier USB
 
-# Hello World Example
+USB firmware for lilygo to control isolated computer with software KVM
 
-Starts a FreeRTOS task to print "Hello World".
+This firmaware aims to be used with a lilygo T-Dongle S3 device. It handles the wireless connection used by the modified version of input-leap to control the keyboard and mouse of the attached computer.
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## How to compile the firmware
 
-## How to use example
+Install ESP-IDF framework
+source the export.Sh file of the ESP-IDF framework
+In the repository run `idf.py build`
 
-Follow detailed instructions provided specifically for this example.
+Upload it with the command `idf.py flash -p /dev/ttyACM0`
 
-Select the instructions depending on Espressif chip installed on your development board:
+## How to compile the test software (linux only)
+Go in the host directory.
+copy wifi.conf.template as wifi.conf
+modify the configuration to set the used wifi network.
+run as sudo test or compile it with the command 
+gcc -o test main.c -lusb-1.0 `pkg-config gnutls --cflags --libs` -lpthread -lconfig
+and run test as root (or change permission on the USB device)
 
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
-
-
-## Example folder contents
-
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both).
-
-Below is short explanation of remaining files in the project folder.
-
-```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
-```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
+TODO : add the installation of requiered library
+TODO : create documentation of the firmware
